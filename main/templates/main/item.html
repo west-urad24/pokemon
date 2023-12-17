@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索ページ</title>
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    
+        
+    <h1>アイテム検索</h1>
+    <h2>〜アイテムの説明を表示します〜</h2>
+
+    <!-- 名前検索へのリンク -->
+    <a href="{% url 'base' %}">基本データ検索</a>
+    <!-- 詳細検索へのリンク -->
+    <a href="{% url 'detail' %}">覚えるわざ検索</a>
+
+    <!-- アイテム検索へのリンク -->
+    <a href="{% url 'item' %}">アイテム検索</a>
+
+    <a href="{% url 'index' %}">トップに戻る</a>
+
+    <form action="/main/item" method="GET">
+        <label for="search">検索:</label>
+        <input type="text" id="search" name="item" placeholder="アイテム名を入力してください">
+        <input type="submit" value="検索">
+    </form>
+
+
+    {% if item_id != '' %}
+        <table>
+            <tr>
+                <th>画像</th>
+                <th>アイテム番号</th>
+                <th>アイテム名</th>
+                <th>説明</th>
+
+            </tr>
+            <tr>
+                <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{eng_item}}.png" alt="Item Image">
+                <td>{{ item_id }}</td>
+                <td>{{ ja_item }}</td>
+                <td>{{ text }}</td>
+
+            <tr>
+        </table>
+    {% endif %}
+
+
+    
+    
+    
+</body>
+</html>

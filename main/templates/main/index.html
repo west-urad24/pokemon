@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検索ページ</title>
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    
+    
+     <h1>ポケモン検索サイト</h1>
+    <h2>〜フシギダネからゼラオラまでのデータが入っています〜</h2>
+    <!-- 名前検索へのリンク -->
+    <a href="{% url 'base' %}">基本データ検索</a>
+
+    <!-- 詳細検索へのリンク -->
+    <a href="{% url 'detail' %}">覚えるわざ検索</a>
+            
+    <!-- アイテム検索へのリンク -->
+    <a href="{% url 'item' %}">アイテム検索</a>
+</body>
+</html>

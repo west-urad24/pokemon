@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索ページ</title>
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    
+        
+    <h1>ポケモン名検索</h1>
+    <h2>〜タイプ、特性を表示します〜</h2>
+
+    <!-- 名前検索へのリンク -->
+    <a href="{% url 'base' %}">基本データ検索</a>
+
+    <!-- 詳細検索へのリンク -->
+    <a href="{% url 'detail' %}">覚えるわざ検索</a>
+        
+    <!-- アイテム検索へのリンク -->
+    <a href="{% url 'item' %}">アイテム検索</a>
+
+    <a href="{% url 'index' %}">トップに戻る</a>
+
+    <form action="/main/base" method="GET">
+        <label for="search">検索:</label>
+        <input type="text" id="search" name="base" placeholder="ポケモン名を入力してください">
+        <input type="submit" value="検索">
+    </form>
+
+    {% if name %}
+        <table>
+            <tr>
+                <th>画像</th>
+                <th>図鑑番号</th>
+                <th>ポケモン名</th>
+                <th>高さ</th>
+                <th>重さ</th>
+                <th>特性</th>
+                <th>タイプ</th>
+                <th>進化</th>
+            </tr>
+            <tr>
+                <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ no }}.png" alt="Pokemon Image"></td>
+                <td>{{ no }}</td>
+                <td>{{ name }}</td>
+                <td>{{ height }}</td>
+                <td>{{ weight }}</td>
+                <td>
+                    {% for ability_item in ability %}
+                        {{ ability_item }}
+                        <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for type_item in types %}
+                        {{ type_item }}
+                        <br>
+                    {% endfor %}
+                </td>
+                
+                <td>{{ message }}</td>
+            </tr>
+        </table>
+    {% endif %}
+        
+</body>
+</html>

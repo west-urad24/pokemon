@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>検索ページ</title>
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    
+        
+    <h1>ポケモン詳細検索</h1>
+    <h2>〜覚える技を表示します〜</h2>
+
+    <!-- 名前検索へのリンク -->
+    <a href="{% url 'base' %}">基本データ検索</a>
+
+    <!-- 詳細検索へのリンク -->
+    <a href="{% url 'detail' %}">覚えるわざ検索</a>
+        
+    <!-- アイテム検索へのリンク -->
+    <a href="{% url 'item' %}">アイテム検索</a>
+
+    <a href="{% url 'index' %}">トップに戻る</a>
+
+    <form action="/main/detail" method="GET">
+        <label for="search">検索:</label>
+        <input type="text" id="search" name="detail" placeholder="ポケモン名を入力してください">
+        <input type="submit" value="検索">
+    </form>
+
+    {% if name %}
+        <table>
+            <tr>
+                <th>画像</th>
+                <th>図鑑番号</th>
+                <th>ポケモン名</th>
+                <th>レベルアップ</th>
+                <th>わざマシン</th>
+                <th>わざレコード</th>
+                <th>タマゴ</th>
+            </tr>
+            <tr>
+                <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ no }}.png" alt="Pokemon Image"></td>
+                <td>{{ no }}</td>
+                <td>{{ name }}</td>
+                <td>{% for result in lv_up %}
+                        LV{{result.0}}:{{result.1}}
+                        <br>
+                    {% endfor %}
+                </td>
+                <td>{% for result in tms %}
+                        No.{{result.0}}:{{result.1}}
+                        <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for result in trs %}
+                        No.{{result.0}}:{{result.1}}
+                        <br>
+                    {% endfor %}
+                </td>
+                <td>{% for egg_move in egg_moves %}
+                        {{egg_move}}
+                        <br>
+                    {% endfor %}
+
+                </td>
+                
+            </tr>
+        </table>
+    {% endif %}
+        
+        
+
+
+
+</body>
+</html>
