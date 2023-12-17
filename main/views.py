@@ -10,7 +10,8 @@ def index(request):
   return render(request, 'main/index.html')
 
 def base_view(request):#名前、図鑑番号、タイプ、特性、進化レベル表示
-    context = {'name': "",'no': "",'ability': "","types":""}
+    context = {'query': '', 'no': '', 'ability': '', "types": '', "height": '',"weight": '', "message": ''}
+    
     # 初期化
     if 'base' in request.GET:
         query = request.GET.get('base', '')#ポケモン
@@ -19,15 +20,17 @@ def base_view(request):#名前、図鑑番号、タイプ、特性、進化レ�
         for json_file in json_files:#ファイル1つずつチェック
             with open(json_file, 'r',encoding="utf-8") as file:
                 data = json.load(file)
+
+                no, ability, types, height, weight, message = '','','','','',''
                 for pokemon in data:#データを一つずつチェック
-                    if query == pokemon["name"]:#ポケモンの名前が一致
+                    if "name" in pokemon and query == pokemon["name"]:#ポケモンの名前が一致
                         no = pokemon["no"]#図鑑番号
                         ability = set(pokemon["abilities"])#特性
                         types = pokemon["types"]#タイプ
                         height = str(pokemon["height"])+"m"#身長
                         weight = str(pokemon["weight"])+"kg"#体重
-
                         evolutions = pokemon["evolutions"]
+                        
                         if evolutions:
                             evolution = evolutions[0]  # 最初の進化情報を取得
                             if evolution["method"] == "LevelUp":
@@ -47,14 +50,13 @@ def base_view(request):#名前、図鑑番号、タイプ、特性、進化レ�
                                 message = "-"
                         else:#進化しないとき
                             message = "-"
-
-                        context = {'name': query, 'no': no, 'ability': ability, "types": types, "height": height,"weight": weight, "message": message}
-                        return render(request, 'main/base.html', context)
+                        context = {'query': query, 'no': no, 'ability': ability, "types": types, "height": height,"weight": weight, "message": message}
+                        
     return render(request, 'main/base.html', context)
     
 
 def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わざマシン、たまご
-    context = {'name': "",'no': "",'ability': "","types":""}
+    context = {'query': '', 'no': '', 'lv_up': '', "tms": '', "trs": '',"egg_moves": ''}
     # 初期化
     if 'detail' in request.GET:
         query = request.GET.get('detail', '')#ポケモン
@@ -63,17 +65,17 @@ def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わ
         for json_file in json_files:#ファイル1つずつチェック
             with open(json_file, 'r') as file:
                 data = json.load(file)
+                no, lv_up, tms, trs, egg_moves, message = '','','','','',''
                 for pokemon in data:#データを一つずつチェック
                     if "name" in pokemon and query == pokemon["name"]:#ポケモンの名前が一致
-                        name = pokemon["name"]
                         no = pokemon["no"]#図鑑番号
                         lv_up =  pokemon["level_up_moves"]#レベルアップで覚えるわざ
                         tms = pokemon["tms"]#tms=わざマシン
                         trs = pokemon["trs"]#trs=わざレコード
                         egg_moves = pokemon["egg_moves"]#egg_moves＝たまごわざ
 
-                        context = {'name': name, 'no': no, 'lv_up': lv_up, "tms": tms, "trs": trs,"egg_moves": egg_moves}
-                        return render(request, 'main/detail.html', context)
+                        context = {'query': query, 'no': no, 'lv_up': lv_up, "tms": tms, "trs": trs,"egg_moves": egg_moves}
+                        
     return render(request, 'main/detail.html', context)
     
 
