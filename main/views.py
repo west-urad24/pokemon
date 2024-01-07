@@ -9,14 +9,26 @@ import requests
 def index(request):
   return render(request, 'main/index.html')
 
+def result_json(type_request):
+    if type_request == "base" or type_request == "detail":
+        all_json_files = r"/Users/nishiuradaisuke/Desktop/myprj/main/static/json/*.json"
+        json_files = glob.glob(all_json_files)
+        return json_files
+    else:
+        item_json = r'/Users/nishiuradaisuke/Desktop/myprj/main/static/json/item.json'
+        with open(item_json,'r',encoding="utf-8") as i_file:
+            item_data = json.load(i_file)
+        return item_data
+
+
+
 def base_view(request):#名前、図鑑番号、タイプ、特性、進化レベル表示
     context = {'query': '', 'no': '', 'ability': '', "types": '', "height": '',"weight": '', "message": ''}
     
     # 初期化
     if 'base' in request.GET:
         query = request.GET.get('base', '')#ポケモン
-        all_json_files = r"/Users/nishiuradaisuke/Desktop/myprj/main/static/json/*.json"
-        json_files = glob.glob(all_json_files)
+        json_files = result_json('base')
         for json_file in json_files:#ファイル1つずつチェック
             with open(json_file, 'r',encoding="utf-8") as file:
                 data = json.load(file)
@@ -60,8 +72,7 @@ def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わ
     # 初期化
     if 'detail' in request.GET:
         query = request.GET.get('detail', '')#ポケモン
-        all_json_files = r"/Users/nishiuradaisuke/Desktop/myprj/main/static/json/*.json"
-        json_files = glob.glob(all_json_files)
+        json_files = result_json('detail')
         for json_file in json_files:#ファイル1つずつチェック
             with open(json_file, 'r') as file:
                 data = json.load(file)
@@ -85,28 +96,27 @@ def item_view(request):
     context = {'ja_item': '','eng_item':'',"item_id":'',"text":''}
     if 'item' in request.GET:
         query = request.GET.get('item', '')
-        item_json = r'/Users/nishiuradaisuke/Desktop/myprj/main/static/json/item.json'
-        with open(item_json,'r',encoding="utf-8") as i_file:
-            item_data = json.load(i_file)
-        
-         # 初期化
-        ja_item = ''
-        eng_item = ''
-        item_id = ''
-        text = ''
-        
-        for data in item_data:
-            if 'ja' in data and data['ja'] == query:
-                ja_item = data['ja']
-                eng_item = data['en'].replace(' ','-').lower()
-                item_api_url = f'https://pokeapi.co/api/v2/item/{eng_item}'
-                response = requests.get(item_api_url)
-                
-                if response.status_code == 200:
-                    url2json_data = response.json()
-                    item_id = url2json_data["id"]
-                    text = url2json_data["flavor_text_entries"][-2]["text"].replace("　","")
+        if query:
+            item_data = result_json('item')
+            
+            # 初期化
+            ja_item = ''
+            eng_item = ''
+            item_id = ''
+            text = ''
+            
+            for data in item_data:
+                if 'ja' in data and data['ja'] == query:
+                    ja_item = data['ja']
+                    eng_item = data['en'].replace(' ','-').lower()
+                    item_api_url = f'https://pokeapi.co/api/v2/item/{eng_item}'
+                    response = requests.get(item_api_url)
+                    
+                    if response.status_code == 200:
+                        url2json_data = response.json()
+                        item_id = url2json_data["id"]
+                        text = url2json_data["flavor_text_entries"][-2]["text"].replace("　","")
 
-        context = {'ja_item': ja_item,'eng_item':eng_item,"item_id":item_id,"text":text}
+            context = {'ja_item': ja_item,'eng_item':eng_item,"item_id":item_id,"text":text}
     return render(request, 'main/item.html', context)
     
