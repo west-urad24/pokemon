@@ -139,5 +139,7 @@ def item_view(request):
                             "item_id":item_id,
                             "text":text
                         })
+                else:
+                    context = []
     return render(request, 'main/item.html', {'context': context})
     
