@@ -42,27 +42,29 @@
                 <th>タイプ</th>
                 <th>進化</th>
             </tr>
-            <tr>
-                <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ no }}.png" alt="Pokemon Image"></td>
-                <td>{{ no }}</td>
-                <td>{{ query }}</td>
-                <td>{{ height }}</td>
-                <td>{{ weight }}</td>
-                <td>
-                    {% for ability_item in ability %}
-                        {{ ability_item }}
-                        <br>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for type_item in types %}
-                        {{ type_item }}
-                        <br>
-                    {% endfor %}
-                </td>
-                
-                <td>{{ message }}</td>
-            </tr>
+            {%for data in context %}
+                <tr>
+                    <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ data.no }}.png" alt="Pokemon Image"></td>
+                    <td>{{ data.no }}</td>
+                    <td>{{ data.query }}</td>
+                    <td>{{ data.height }}</td>
+                    <td>{{ data.weight }}</td>
+                    <td>
+                        {% for ability_item in data.ability %}
+                            {{ ability_item }}
+                            <br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for type_item in data.types %}
+                            {{ type_item }}
+                            <br>
+                        {% endfor %}
+                    </td>
+                    
+                    <td>{{ data.message }}</td>
+                </tr>
+            {% endfor %}
         </table>
     {% endif %}
         

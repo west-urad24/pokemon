@@ -11,7 +11,7 @@ def index(request):
 
 def result_json(type_request):
     if type_request == "base" or type_request == "detail":
-        all_json_files = r"/Users/nishiuradaisuke/Desktop/myprj/main/static/json/*.json"
+        all_json_files = r"/Users/nishiuradaisuke/Desktop/myprj/main/static/json/gen*.json"
         json_files = glob.glob(all_json_files)
         return json_files
     else:
@@ -22,25 +22,24 @@ def result_json(type_request):
 
 
 
-def base_view(request):#名前、図鑑番号、タイプ、特性、進化レベル表示
-    context = {'query': '', 'no': '', 'ability': '', "types": '', "height": '',"weight": '', "message": ''}
+def base_view(request):  # 名前、図鑑番号、タイプ、特性、進化レベル表示
+    context = []  # リスト形式に変更
     
-    # 初期化
     if 'base' in request.GET:
-        query = request.GET.get('base', '')#ポケモン
+        query = request.GET.get('base', '')  # ポケモン名
         json_files = result_json('base')
-        for json_file in json_files:#ファイル1つずつチェック
-            with open(json_file, 'r',encoding="utf-8") as file:
+        
+        for json_file in json_files:  # ファイル1つずつチェック
+            with open(json_file, 'r', encoding="utf-8") as file:
                 data = json.load(file)
 
-                no, ability, types, height, weight, message = '','','','','',''
-                for pokemon in data:#データを一つずつチェック
-                    if "name" in pokemon and query == pokemon["name"]:#ポケモンの名前が一致
-                        no = pokemon["no"]#図鑑番号
-                        ability = set(pokemon["abilities"])#特性
-                        types = pokemon["types"]#タイプ
-                        height = str(pokemon["height"])+"m"#身長
-                        weight = str(pokemon["weight"])+"kg"#体重
+                for pokemon in data:  # jsonデータを一つずつチェック
+                    if "name" in pokemon and query in pokemon["name"] and "-" not in pokemon["name"]:  # ポケモンの名前が一致
+                        no = pokemon["no"]  # 図鑑番号
+                        ability = set(pokemon["abilities"])  # 特性
+                        types = pokemon["types"]  # タイプ
+                        height = f"{pokemon['height']}m"  # 身長
+                        weight = f"{pokemon['weight']}kg"  # 体重
                         evolutions = pokemon["evolutions"]
                         
                         if evolutions:
@@ -60,15 +59,25 @@ def base_view(request):#名前、図鑑番号、タイプ、特性、進化レ�
                                 message = "懐いた状態でレベルアップ"
                             else:
                                 message = "-"
-                        else:#進化しないとき
+                        else:  # 進化しないとき
                             message = "-"
-                        context = {'query': query, 'no': no, 'ability': ability, "types": types, "height": height,"weight": weight, "message": message}
-                        
-    return render(request, 'main/base.html', context)
+
+                        # ポケモンの情報をリストに追加
+                        context.append({
+                            'query': pokemon["name"],
+                            'no': no,
+                            'ability': list(ability),  # setではなくlistに変換
+                            'types': types,
+                            'height': height,
+                            'weight': weight,
+                            'message': message
+                        })
+    
+    return render(request, 'main/base.html', {'context': context})  # 辞書として渡す
     
 
 def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わざマシン、たまご
-    context = {'query': '', 'no': '', 'lv_up': '', "tms": '', "trs": '',"egg_moves": ''}
+    context = []  # リスト形式に変更
     # 初期化
     if 'detail' in request.GET:
         query = request.GET.get('detail', '')#ポケモン
@@ -76,24 +85,31 @@ def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わ
         for json_file in json_files:#ファイル1つずつチェック
             with open(json_file, 'r') as file:
                 data = json.load(file)
-                no, lv_up, tms, trs, egg_moves, message = '','','','','',''
+                no, lv_up, tms, trs, egg_moves = '','','','',''
                 for pokemon in data:#データを一つずつチェック
-                    if "name" in pokemon and query == pokemon["name"]:#ポケモンの名前が一致
+                    if "name" in pokemon and query in pokemon["name"] and "-" not in pokemon["name"]:#ポケモンの名前が一致
                         no = pokemon["no"]#図鑑番号
                         lv_up =  pokemon["level_up_moves"]#レベルアップで覚えるわざ
                         tms = pokemon["tms"]#tms=わざマシン
                         trs = pokemon["trs"]#trs=わざレコード
                         egg_moves = pokemon["egg_moves"]#egg_moves＝たまごわざ
 
-                        context = {'query': query, 'no': no, 'lv_up': lv_up, "tms": tms, "trs": trs,"egg_moves": egg_moves}
-                        
-    return render(request, 'main/detail.html', context)
+                        context.append({
+                            'query': pokemon["name"],
+                            'no': no,
+                            'lv_up': lv_up,
+                            'tms': tms,
+                            'trs': trs,
+                            'egg_moves': egg_moves,
+                        })
+
+    return render(request, 'main/detail.html', {'context': context})
     
 
 
 def item_view(request):
     #アイテム入力→英語に変換→アイテム説明、画像、名称表示
-    context = {'ja_item': '','eng_item':'',"item_id":'',"text":''}
+    context = []  # リスト形式に変更
     if 'item' in request.GET:
         query = request.GET.get('item', '')
         if query:
@@ -106,7 +122,7 @@ def item_view(request):
             text = ''
             
             for data in item_data:
-                if 'ja' in data and data['ja'] == query:
+                if 'ja' in data and query in data['ja']:
                     ja_item = data['ja']
                     eng_item = data['en'].replace(' ','-').lower()
                     item_api_url = f'https://pokeapi.co/api/v2/item/{eng_item}'
@@ -117,6 +133,11 @@ def item_view(request):
                         item_id = url2json_data["id"]
                         text = url2json_data["flavor_text_entries"][-2]["text"].replace("　","")
 
-            context = {'ja_item': ja_item,'eng_item':eng_item,"item_id":item_id,"text":text}
-    return render(request, 'main/item.html', context)
+                        context.append({
+                            'ja_item': ja_item,
+                            'eng_item':eng_item,
+                            "item_id":item_id,
+                            "text":text
+                        })
+    return render(request, 'main/item.html', {'context': context})
     

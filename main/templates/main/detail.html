@@ -40,34 +40,36 @@
                 <th>わざレコード</th>
                 <th>タマゴ</th>
             </tr>
-            <tr>
-                <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ no }}.png" alt="Pokemon Image"></td>
-                <td>{{ no }}</td>
-                <td>{{ query }}</td>
-                <td>{% for result in lv_up %}
-                        LV{{result.0}}:{{result.1}}
-                        <br>
-                    {% endfor %}
-                </td>
-                <td>{% for result in tms %}
-                        No.{{result.0}}:{{result.1}}
-                        <br>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for result in trs %}
-                        No.{{result.0}}:{{result.1}}
-                        <br>
-                    {% endfor %}
-                </td>
-                <td>{% for egg_move in egg_moves %}
-                        {{egg_move}}
-                        <br>
-                    {% endfor %}
+            {%for data in context %}
+                <tr>
+                    <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ data.no }}.png" alt="Pokemon Image"></td>
+                    <td>{{ data.no }}</td>
+                    <td>{{ data.query }}</td>
+                    <td>{% for result in data.lv_up %}
+                            LV{{result.0}}:{{result.1}}
+                            <br>
+                        {% endfor %}
+                    </td>
+                    <td>{% for result in data.tms %}
+                            No.{{result.0}}:{{result.1}}
+                            <br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for result in data.trs %}
+                            No.{{result.0}}:{{result.1}}
+                            <br>
+                        {% endfor %}
+                    </td>
+                    <td>{% for egg_move in data.egg_moves %}
+                            {{egg_move}}
+                            <br>
+                        {% endfor %}
 
-                </td>
-                
-            </tr>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
         </table>
     {% endif %}
         
