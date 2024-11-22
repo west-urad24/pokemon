@@ -28,27 +28,30 @@
         <input type="submit" value="検索">
     </form>
 
-
-    {% if context %}
+    {%if data_len > 0 %}
+    <form action="/main/item" method="GET">
         <label for="sort_item">ソート:</label>
         <select id="sort_item" name="sort_item">
             <option value="item_id">アイテム番号</option>
             <option value="ja_item">アイテム名</option>
         </select>
-        <select id="ascdesc" name="sort">
-            <option value="asc_item">昇順</option>
-            <option value="desc_item">降順</option>
+        <select id="ascdesc_item" name="ascdesc_item">
+            <option value="asc">昇順</option>
+            <option value="desc">降順</option>
         </select>
-
         <input type="submit" value="ソートする">
-        <table>
-            <tr>
-                <th>画像</th>
-                <th>アイテム番号</th>
-                <th>アイテム名</th>
-                <th>説明</th>
+    </form>
+    {% endif %}
 
-            </tr>
+    <table>
+        <tr>
+            <th>画像</th>
+            <th>アイテム番号</th>
+            <th>アイテム名</th>
+            <th>説明</th>
+
+        </tr>
+        {%if data_len > 0 %}
             {%for data in context_item %}
                 <tr>
                     <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/{{data.eng_item}}.png" alt="Item Image">
@@ -57,11 +60,11 @@
                     <td>{{ data.text }}</td>
                 <tr>
             {% endfor %}
-        </table>
-    {% endif %}
+        {% endif %}
+    </table>
 
 
-    
+
     
     
 </body>

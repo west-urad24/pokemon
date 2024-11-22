@@ -30,18 +30,36 @@
         <input type="submit" value="検索">
     </form>
 
-    {% if no != '' %}
-        <table>
-            <tr>
-                <th>画像</th>
-                <th>図鑑番号</th>
-                <th>ポケモン名</th>
-                <th>高さ</th>
-                <th>重さ</th>
-                <th>特性</th>
-                <th>タイプ</th>
-                <th>進化</th>
-            </tr>
+    {%if data_len > 0 %}
+    <form action="/main/base" method="GET">
+        <label for="sort_base">ソート:</label>
+        <select id="sort_base" name="sort_base">
+            <option value="no">図鑑番号</option>
+            <option value="query">ポケモン名</option>
+            <option value="height">高さ</option>
+            <option value="weight">重さ</option>
+        </select>
+        <select id="ascdesc_base" name="ascdesc_base">
+            <option value="asc">昇順</option>
+            <option value="desc">降順</option>
+        </select>
+        <input type="submit" value="ソートする">
+    </form>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th>画像</th>
+            <th>図鑑番号</th>
+            <th>ポケモン名</th>
+            <th>高さ</th>
+            <th>重さ</th>
+            <th>特性</th>
+            <th>タイプ</th>
+            <th>進化</th>
+        </tr>
+
+        {%if data_len > 0 %}
             {%for data in context_base %}
                 <tr>
                     <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ data.no }}.png" alt="Pokemon Image"></td>
@@ -65,8 +83,8 @@
                     <td>{{ data.message }}</td>
                 </tr>
             {% endfor %}
-        </table>
-    {% endif %}
+        {% endif %}
+    </table>
         
 </body>
 </html>

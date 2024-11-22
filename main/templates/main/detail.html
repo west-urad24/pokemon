@@ -29,17 +29,32 @@
         <input type="submit" value="検索">
     </form>
 
-    {% if no != '' %}
-        <table>
-            <tr>
-                <th>画像</th>
-                <th>図鑑番号</th>
-                <th>ポケモン名</th>
-                <th>レベルアップ</th>
-                <th>わざマシン</th>
-                <th>わざレコード</th>
-                <th>タマゴ</th>
-            </tr>
+    {%if data_len > 0 %}
+    <form action="/main/detail" method="GET">
+        <label for="sort_detail">ソート:</label>
+        <select id="sort_detail" name="sort_detail">
+            <option value="no">図鑑番号</option>
+            <option value="query">ポケモン名</option>
+        </select>
+        <select id="ascdesc_detail" name="ascdesc_detail">
+            <option value="asc">昇順</option>
+            <option value="desc">降順</option>
+        </select>
+        <input type="submit" value="ソートする">
+    </form>
+    {% endif %}
+    
+    <table>
+        <tr>
+            <th>画像</th>
+            <th>図鑑番号</th>
+            <th>ポケモン名</th>
+            <th>レベルアップ</th>
+            <th>わざマシン</th>
+            <th>わざレコード</th>
+            <th>タマゴ</th>
+        </tr>
+        {%if data_len > 0 %}
             {%for data in context_detail %}
                 <tr>
                     <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ data.no }}.png" alt="Pokemon Image"></td>
@@ -70,12 +85,8 @@
                     
                 </tr>
             {% endfor %}
-        </table>
-    {% endif %}
-        
-        
-
-
+        {% endif %}
+    </table>
 
 </body>
 </html>

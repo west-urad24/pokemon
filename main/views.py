@@ -1,8 +1,6 @@
 # Create your views here.
 from django.shortcuts import render
 from django.http import HttpResponse
-import glob
-import json
 import requests
 from .util import sort_data
 from .models import Pokemon,Item
@@ -23,10 +21,11 @@ def base_view(request):  # 名前、図鑑番号、タイプ、特性、進化�
     global context_detail
     global context_item
 
+    context_detail,context_item = [],[]
     if 'base' in request.GET:
-        context_detail,context_item = [],[]
         query = request.GET.get('base', '')  # ポケモン名
         pokemons = Pokemon.objects.filter(name__icontains=query)
+        context_base = []
         for pokemon in pokemons:  # ファイル1つずつチェック
             if "-" not in pokemon.name:
                 evolutions = pokemon.evolutions
@@ -60,7 +59,11 @@ def base_view(request):  # 名前、図鑑番号、タイプ、特性、進化�
                     'weight': f"{pokemon.weight}kg",
                     'message': message
                 })
-    return render(request, 'main/base.html', {'context_base': context_base})  # 辞書として渡す
+    
+    if "sort_base" in request.GET and "ascdesc_base" in request.GET:
+        context_base = sort_data(context_base,"base",request)
+
+    return render(request, 'main/base.html', {'context_base': context_base,'data_len':len(context_base)})  # 辞書として渡す
     
 
 def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わざマシン、たまご
@@ -68,12 +71,12 @@ def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わ
     global context_base
     global context_item
     
+    context_base,context_item = [],[]
     # 初期化
     if 'detail' in request.GET:
-        context_base,context_item = [],[]
         query = request.GET.get('detail', '')  # ポケモン名
         pokemons = Pokemon.objects.filter(name__icontains=query)
-        
+        context_detail = []
         for pokemon in pokemons:#データを一つずつチェック
             if "-" not in pokemon.name:#ポケモンの名前が一致
                 no = pokemon.no#図鑑番号
@@ -90,8 +93,10 @@ def detail_view(request):#名前、図鑑番号、タイプ、覚える技、わ
                     'trs': trs,
                     'egg_moves': egg_moves,
                 })
+    if "sort_detail" in request.GET and "ascdesc_detail" in request.GET:
+        context_detail = sort_data(context_detail,"detail",request)
 
-    return render(request, 'main/detail.html', {'context_detail': context_detail})
+    return render(request, 'main/detail.html', {'context_detail': context_detail,'data_len':len(context_detail)})
 
 def item_view(request):
     #アイテム入力→英語に変換→アイテム説明、画像、名称表示
@@ -99,12 +104,12 @@ def item_view(request):
     global context_base
     global context_detail
     
+    context_base,context_detail = [],[]
     if 'item' in request.GET:
-        context_base,context_detail = [],[]
+        context_item = []
         query = request.GET.get('item', '')
         if query:
             items = Item.objects.filter(ja_item__icontains=query)
-            
             for item in items:
                 if query in item.ja_item:
                     ja_item = item.ja_item
@@ -125,4 +130,7 @@ def item_view(request):
                         })
                 else:
                     context_item = []
-    return render(request, 'main/item.html', {'context_item': context_item}) 
+    if "sort_item" in request.GET and "ascdesc_item" in request.GET:
+        context_item = sort_data(context_item,"item",request)
+
+    return render(request, 'main/item.html', {'context_item': context_item,'data_len':len(context_item)}) 
