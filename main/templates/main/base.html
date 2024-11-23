@@ -45,6 +45,9 @@
         </select>
         <input type="submit" value="ソートする">
     </form>
+    <p>
+        検索結果:{{data_len}}件
+    </p>
     {% endif %}
 
     <table>
@@ -83,6 +86,10 @@
                     <td>{{ data.message }}</td>
                 </tr>
             {% endfor %}
+        {% elif data_len == 'no_data' %}
+                <p>
+                    検索結果0件　もう一度検索してください。
+                </p>
         {% endif %}
     </table>
         

@@ -43,6 +43,10 @@
     </form>
     {% endif %}
 
+    <p>
+        検索結果:{{data_len}}件
+    </p>
+
     <table>
         <tr>
             <th>画像</th>
@@ -60,6 +64,10 @@
                     <td>{{ data.text }}</td>
                 <tr>
             {% endfor %}
+        {% elif data_len == 'no_data' %}
+            <p>
+                検索結果0件　もう一度検索してください。
+            </p>
         {% endif %}
     </table>
 
