@@ -7,7 +7,6 @@
     <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
 </head>
 <body>
-    
         
     <h1>ポケモン詳細検索</h1>
     <h2>〜覚える技を表示します〜</h2>
@@ -42,12 +41,9 @@
         </select>
         <input type="submit" value="ソートする">
     </form>
+    <p>検索結果:{{data_len}}件</p>
     {% endif %}
     
-    <p>
-        検索結果:{{data_len}}件
-    </p>
-
     <table>
         <tr>
             <th>画像</th>
@@ -84,17 +80,12 @@
                             {{egg_move}}
                             <br>
                         {% endfor %}
-
                     </td>
-                    
                 </tr>
             {% endfor %}
         {% elif data_len == 'no_data' %}
-            <p>
-                検索結果0件　もう一度検索してください。
-            </p>
+            <p>検索結果0件　もう一度検索してください。</p>
         {% endif %}
     </table>
-
 </body>
 </html>

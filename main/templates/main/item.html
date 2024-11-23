@@ -7,8 +7,6 @@
     <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
 </head>
 <body>
-    
-        
     <h1>アイテム検索</h1>
     <h2>〜アイテムの説明を表示します〜</h2>
 
@@ -41,11 +39,8 @@
         </select>
         <input type="submit" value="ソートする">
     </form>
+    <p>検索結果:{{data_len}}件</p>
     {% endif %}
-
-    <p>
-        検索結果:{{data_len}}件
-    </p>
 
     <table>
         <tr>
@@ -53,7 +48,6 @@
             <th>アイテム番号</th>
             <th>アイテム名</th>
             <th>説明</th>
-
         </tr>
         {%if data_len > 0 %}
             {%for data in context_item %}
@@ -65,15 +59,8 @@
                 <tr>
             {% endfor %}
         {% elif data_len == 'no_data' %}
-            <p>
-                検索結果0件　もう一度検索してください。
-            </p>
+            <p>検索結果0件　もう一度検索してください。</p>
         {% endif %}
     </table>
-
-
-
-    
-    
 </body>
 </html>

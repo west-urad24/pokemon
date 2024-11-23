@@ -8,8 +8,6 @@
 </head>
 
 <body>
-    
-        
     <h1>ポケモン名検索</h1>
     <h2>〜タイプ、特性を表示します〜</h2>
 
@@ -45,9 +43,7 @@
         </select>
         <input type="submit" value="ソートする">
     </form>
-    <p>
-        検索結果:{{data_len}}件
-    </p>
+    <p>検索結果:{{data_len}}件</p>
     {% endif %}
 
     <table>
@@ -82,16 +78,12 @@
                             <br>
                         {% endfor %}
                     </td>
-                    
                     <td>{{ data.message }}</td>
                 </tr>
             {% endfor %}
         {% elif data_len == 'no_data' %}
-                <p>
-                    検索結果0件　もう一度検索してください。
-                </p>
+                <p>検索結果0件　もう一度検索してください。</p>
         {% endif %}
     </table>
-        
 </body>
 </html>
