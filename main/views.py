@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
-from .util import sort_data,base_check,item_check,generation_check
+from .util import sort_data,base_check,item_check
 from .models import Pokemon,Item
 import locale
 
