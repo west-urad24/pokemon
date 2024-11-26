@@ -7,7 +7,21 @@
     <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet">
 </head>
 <body>
-        
+    <!-- サイドバーのトグルボタン -->
+    <button class="toggle-btn" onclick="toggleSidebar()">&#9776;</button>
+
+    <!-- サイドバーのコンテンツ -->
+    <div id="sidebar">
+        <div class="sidebar-content">
+            <ul>
+                <li>ログアウト</li>
+                <li>パスワード変更</li>
+                <li>お気に入りポケモン</li>
+                <li>退会</li>
+            </ul>
+        </div>
+    </div>
+
     <h1>ポケモン詳細検索</h1>
     <h2>〜覚える技を表示します〜</h2>
 
@@ -19,6 +33,9 @@
         
     <!-- アイテム検索へのリンク -->
     <a href="{% url 'item' %}">アイテム検索</a>
+
+    <!-- 世代別検索へのリンク -->
+    <a href="{% url 'generation' %}">世代別検索</a>
 
     <a href="{% url 'index' %}">トップに戻る</a>
 
@@ -33,7 +50,7 @@
         <label for="sort_detail">ソート:</label>
         <select id="sort_detail" name="sort_detail">
             <option value="no">図鑑番号</option>
-            <option value="query">ポケモン名</option>
+            <option value='detail_name'>ポケモン名</option>
         </select>
         <select id="ascdesc_detail" name="ascdesc_detail">
             <option value="asc">昇順</option>
@@ -41,7 +58,7 @@
         </select>
         <input type="submit" value="ソートする">
     </form>
-    <p>検索結果:{{data_len}}件</p>
+    <p>「{{word}}」の検索結果:{{data_len}}件</p>
     {% endif %}
     
     <table>
@@ -59,7 +76,7 @@
                 <tr>
                     <td><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ data.no }}.png" alt="Pokemon Image"></td>
                     <td>{{ data.no }}</td>
-                    <td>{{ data.query }}</td>
+                    <td>{{ data.detail_name }}</td>
                     <td>{% for result in data.lv_up %}
                             LV{{result.0}}:{{result.1}}
                             <br>
@@ -84,8 +101,14 @@
                 </tr>
             {% endfor %}
         {% elif data_len == 'no_data' %}
-            <p>検索結果0件　もう一度検索してください。</p>
+            <p>「{{word}}」の検索結果0件　もう一度検索してください。</p>
         {% endif %}
     </table>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+        }
+    </script>
 </body>
 </html>
