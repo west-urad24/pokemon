@@ -49,17 +49,6 @@ def base_check(pokemon,context_base):
     })
     return context_base
 
-def generation_check(pokemon,pokemon_type,context_generation):
-    if (pokemon_type[0] in pokemon.types) and (pokemon_type[-1] in pokemon.types):
-        context_generation.append({
-            'generation_name': pokemon.name,
-            'no': pokemon.no,
-            'ability': set(pokemon.abilities),
-            'types': pokemon.types,
-        })
-
-    return context_generation
-
 def item_check(items,context_item,item_name):
     for item in items:
         if item_name in item.ja_item:

@@ -116,10 +116,13 @@ def generation_view(request):
         no_match_pokemons = Pokemon.objects.filter(no__range=(min_no,max_no))
 
         for pokemon in no_match_pokemons:
-            if "-" not in pokemon.name:
-                #DBのポケモンのタイプを五十音順に並べる
-                context_generation = generation_check(pokemon,pokemon_type,context_generation)
-
+            if ("-" not in pokemon.name) and (pokemon_type[0] in pokemon.types) and (pokemon_type[-1] in pokemon.types):
+                context_generation.append({
+                    'generation_name': pokemon.name,
+                    'no': pokemon.no,
+                    'ability': set(pokemon.abilities),
+                    'types': pokemon.types,
+                })
         if len(context_generation) == 0:
             return render(request, 'main/generation.html', {'data_len': 'no_data','word':generation_name})
     
